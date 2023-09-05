@@ -8,37 +8,37 @@
 
 import Foundation
 
-struct Metadata: Decodable {
+public struct Metadata: Decodable {
     
-    struct Format: Decodable {
-        let id: String
-        let national: String?
-        let international: String?
-        let comments: String?
+    public struct Format: Decodable {
+        public let id: String
+        public let national: String?
+        public let international: String?
+        public let comments: String?
     }
     
-    struct Operator: Decodable {
-        let id: String
-        let name: String
+    public struct Operator: Decodable {
+        public let id: String
+        public let name: String
     }
     
-    struct Range: Decodable {
-        let prefix: String
-        let length: [String]?
-        let areaCodeLength: String?
-        let `operator`: String?
-        let format: String?
-        let geocode: String?
+    public struct Range: Decodable {
+        public let prefix: String
+        public let length: [String]?
+        public let areaCodeLength: String?
+        public let `operator`: String?
+        public let format: String?
+        public let geocode: String?
     }
     
-    let code: UInt
-    let timezone: String?
-    let nationalPrefix: String?
-    let prefix: String?
-    let extraRegion: [String]?
+    public let code: UInt
+    public let timezone: String?
+    public let nationalPrefix: String?
+    public let prefix: String?
+    public let extraRegion: [String]?
 
-    let ranges: [Range]
-    let operators: [Operator]
-    let formats: [Format]
+    public let ranges: [Range]
+    public let operators: [Operator]
+    public let formats: [Format]
     
 }
