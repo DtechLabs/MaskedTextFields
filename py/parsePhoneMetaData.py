@@ -2,6 +2,7 @@ import zipfile
 import os
 import csv
 import json
+import shutil
 
 def make_metadata_json(csvPath):
     data = { }
@@ -138,6 +139,29 @@ def read_formats(csvPath):
     return data
 
 
+def read_examples(csvPath):
+        data = []
+
+        if not os.path.isfile(csvPath):
+            return data
+
+        with open(csvPath, encoding="utf-8") as csv_file:
+            reader = csv.DictReader(csv_file, dialect="libphone")
+            for rows in reader:
+                if None not in rows.keys():
+                    region = [v for v in rows.keys() if "Region" in v][0]
+                    type = [v for v in rows.keys() if "Type" in v][0]
+                    number = [v for v in rows.keys() if "Number" in v][0]
+
+                    if rows[type].strip() == "MOBILE": 
+                        item = {
+                            "region": rows[region].strip(),
+                            "number": rows[number].strip().strip("\"")
+                        }
+                        data.append(item)
+
+        return data
+
 if __name__ == '__main__':
 
     metadataName = "metadata.zip"
@@ -161,6 +185,10 @@ if __name__ == '__main__':
         data[region]["operators"] = read_operators(f"metadata/{data[region]['code']}/operators.csv")
         data[region]["ranges"] = read_ranges(f"metadata/{data[region]['code']}/ranges.csv")
         data[region]["formats"] = read_formats(f"metadata/{data[region]['code']}/formats.csv")
+        data[region]["examples"] = read_examples(f"metadata/{data[region]['code']}/examples.csv")
     
-    with open("../Source/MobilePhoneFormatter/Metadata/metadata.json", 'w', encoding='utf-8') as json_file:
+    with open("../Sources/MobilePhoneFormatter/Metadata/metadata.json", 'w', encoding='utf-8') as json_file:
         json_file.write(json.dumps(data))
+
+    os.remove(metadataName)
+    shutil.rmtree("metadata")
