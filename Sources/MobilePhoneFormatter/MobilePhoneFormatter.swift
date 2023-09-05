@@ -10,7 +10,7 @@ import Foundation
 
 public struct MobilePhoneFormatter {
     
-    let metadata: [String: Metadata]
+    let metadata: [String: RegionPhoneMetadata]
     
     public init() throws {
         // Initial load metadata
@@ -19,10 +19,10 @@ public struct MobilePhoneFormatter {
         }
         
         let data = try Data(contentsOf: URL(filePath: path))
-        metadata = try JSONDecoder().decode([String: Metadata].self, from: data)
+        metadata = try JSONDecoder().decode([String: RegionPhoneMetadata].self, from: data)
     }
     
-    public func metadata(for region: String) -> Metadata? {
+    public func metadata(for region: String) -> RegionPhoneMetadata? {
         metadata[region.uppercased()]
     }
     

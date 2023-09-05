@@ -1,5 +1,5 @@
 //
-//  Metadata.swift
+//  RegionPhoneMetadata.swift
 //  MobilePhoneFormatter
 //
 //  Created by Yuri on 05.09.2023.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Metadata: Decodable {
+public struct RegionPhoneMetadata: Decodable {
     
     public struct Format: Decodable {
         public let id: String
