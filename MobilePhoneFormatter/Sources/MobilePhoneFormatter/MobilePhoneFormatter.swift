@@ -22,4 +22,8 @@ public struct MobilePhoneFormatter {
         metadata = try JSONDecoder().decode([String: Metadata].self, from: data)
     }
     
+    public func metadata(for region: String) -> Metadata? {
+        metadata[region.uppercased()]
+    }
+    
 }
