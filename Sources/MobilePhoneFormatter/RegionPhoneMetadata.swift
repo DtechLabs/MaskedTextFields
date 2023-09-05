@@ -31,6 +31,11 @@ public struct RegionPhoneMetadata: Decodable {
         public let geocode: String?
     }
     
+    public struct Example: Decodable {
+        public let region: String
+        public let number: String
+    }
+    
     public let code: UInt
     public let timezone: String?
     public let nationalPrefix: String?
@@ -40,5 +45,6 @@ public struct RegionPhoneMetadata: Decodable {
     public let ranges: [Range]
     public let operators: [Operator]
     public let formats: [Format]
+    public let examples: [Example]
     
 }
