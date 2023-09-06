@@ -58,7 +58,7 @@ public class MobilePhoneFormatter: Formatter {
             var number = number,
             let mask = try? region?.range(for: number)?.format
         else {
-            return nil
+            return number
         }
         // Clean up old numbers
         number = number.components(separatedBy: .decimalDigits.inverted).joined()
