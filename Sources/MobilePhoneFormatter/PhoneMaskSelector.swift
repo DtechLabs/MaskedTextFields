@@ -61,12 +61,16 @@ public class PhoneMaskSelector {
     
     private func checkPrefix(_ prefix: String, phone: String) -> Bool {
         if prefix.hasSuffix("]") {
-            guard let regex = try? Regex("^\(prefix)") else {
-                return false
+            if phone.count < prefix.count, prefix.prefix(while: { $0 != "[" }).count >= phone.count {
+                return prefix.hasPrefix(phone)
+            } else {
+                guard let regex = try? Regex("^\(prefix)") else {
+                    return false
+                }
+                return phone.matches(of: regex).count > 0
             }
-            return phone.matches(of: regex).count > 0
         } else {
-            return phone.hasPrefix(prefix)
+            return phone.count > prefix.count ? phone.hasPrefix(prefix) : prefix.hasPrefix(phone)
         }
     }
     

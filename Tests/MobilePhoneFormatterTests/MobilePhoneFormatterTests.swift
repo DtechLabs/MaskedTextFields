@@ -64,4 +64,15 @@ final class MobilePhoneFormatterTests: XCTestCase {
         
     }
     
+    func testSelectRange() {
+        let region = regions["US"]!
+        let selector = PhoneMaskSelector(region)
+        
+        XCTAssertNotNil(selector.selectRange("2"))
+        XCTAssertNotNil(selector.selectRange("21"))
+        XCTAssertNotNil(selector.selectRange("213"))
+        XCTAssertNotNil(selector.selectRange("213465"))
+
+    }
+    
 }

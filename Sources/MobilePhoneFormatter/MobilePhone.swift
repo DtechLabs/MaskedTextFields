@@ -30,6 +30,10 @@ public struct MobilePhone {
             return number
         }
         
+        guard !number.isEmpty else {
+            return ""
+        }
+        
         var result = ""
         var index = number.startIndex
         for ch in mask where index < number.endIndex {
