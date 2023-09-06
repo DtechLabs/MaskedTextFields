@@ -14,6 +14,10 @@ public struct MobilePhone {
     
     let allowedChars = Set("0123456789()-+ ")
     
+    public init() {
+        self.number = ""
+    }
+    
     public init(_ number: String) throws {
         guard allowedChars.isSuperset(of: number) else {
             throw MobilePhoneFormatterError.incorrectSymbol
