@@ -21,7 +21,11 @@ public struct MobilePhone {
         self.number = number.components(separatedBy: .decimalDigits.inverted).joined()
     }
     
-    public func format(by mask: String) -> String {
+    public func format(by mask: String?) -> String {
+        guard let mask = mask else {
+            return number
+        }
+        
         var result = ""
         var index = number.startIndex
         for ch in mask where index < number.endIndex {
