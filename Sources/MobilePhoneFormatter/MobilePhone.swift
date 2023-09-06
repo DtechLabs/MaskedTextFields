@@ -13,6 +13,7 @@ public struct MobilePhone {
     public private(set) var number: String
     
     let allowedChars = Set("0123456789()-+ ")
+    let digitMaskSymbol: Character = "X"
     
     public init() {
         self.number = ""
@@ -37,7 +38,7 @@ public struct MobilePhone {
         var result = ""
         var index = number.startIndex
         for ch in mask where index < number.endIndex {
-            if ch == "#" {
+            if ch == digitMaskSymbol {
                 result.append(number[index])
                 index = number.index(after: index)
             } else {
@@ -52,7 +53,7 @@ public struct MobilePhone {
             return true
         }
         
-        let digitCount = mask.filter { $0 == "#" }.count
+        let digitCount = mask.filter { $0 == digitMaskSymbol }.count
         
         guard digitCount == number.count else {
             return false
