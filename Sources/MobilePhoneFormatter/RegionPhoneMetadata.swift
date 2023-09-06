@@ -52,3 +52,15 @@ public struct RegionPhoneMetadata: Codable, Hashable {
     public let examples: [Example]
     
 }
+
+
+public extension RegionPhoneMetadata {
+    
+    func range(for number: String) throws -> Range? {
+        try ranges.sorted().first {
+            let regex = try Regex("^\($0.prefix)")
+            return number.matches(of: regex).count > 0
+        }
+    }
+    
+}

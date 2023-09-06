@@ -30,10 +30,10 @@ public struct Regions {
 
 public class MobilePhoneFormatter: Formatter {
     
-    let mask: String
+    let region: RegionPhoneMetadata?
     
-    init(mask: String) {
-        self.mask = mask
+    public init(_ region: RegionPhoneMetadata?) {
+        self.region = region
         super.init()
     }
     
@@ -54,7 +54,10 @@ public class MobilePhoneFormatter: Formatter {
     }
     
     public func formatted(_ number: String?) -> String? {
-        guard var number = number else {
+        guard
+            var number = number,
+            let mask = try? region?.range(for: number)?.format
+        else {
             return nil
         }
         // Clean up old numbers
@@ -76,8 +79,8 @@ public class MobilePhoneFormatter: Formatter {
 
 public extension Formatter {
     
-    static func mobilePhone(_ mask: String) -> MobilePhoneFormatter {
-        MobilePhoneFormatter(mask: mask)
+    static func mobilePhone(_ region: RegionPhoneMetadata?) -> MobilePhoneFormatter {
+        MobilePhoneFormatter(region)
     }
     
 }
