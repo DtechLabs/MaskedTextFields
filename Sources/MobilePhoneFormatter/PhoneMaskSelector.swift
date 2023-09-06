@@ -7,9 +7,9 @@
 //
 import Foundation
 
-class PhoneMaskSelector {
+public class PhoneMaskSelector {
         
-    let region: RegionPhoneMetadata?
+    public let region: RegionPhoneMetadata?
     let ranges: [RegionPhoneMetadata.Range]?
     
     private var oldNumber: String = ""
@@ -21,7 +21,7 @@ class PhoneMaskSelector {
         self.ranges = region?.ranges.sorted()
     }
     
-    func selectMask(_ phone: String) -> String? {
+    public func selectMask(_ phone: String) -> String? {
         defer {
             oldNumber = phone
         }
