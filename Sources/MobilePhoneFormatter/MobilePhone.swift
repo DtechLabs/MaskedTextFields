@@ -10,7 +10,7 @@ import Foundation
 public struct MobilePhone {
     
     /// Clean phone number  without any additional symbols  like 123456789
-    public var number: String
+    public private(set) var number: String
     
     let allowedChars = Set("0123456789()-+ ")
     
@@ -23,19 +23,15 @@ public struct MobilePhone {
     
     public func format(by mask: String) -> String {
         var result = ""
-        let clearNumber = number.components(separatedBy: .decimalDigits.inverted).joined()
-        var startIndex = clearNumber.startIndex
-        let endIndex = clearNumber.endIndex
-        
-        for char in mask where startIndex < endIndex {
-            if char == "X" {
-                result.append(clearNumber[startIndex])
-                startIndex = clearNumber.index(after: startIndex)
+        var index = number.startIndex
+        for ch in mask where index < number.endIndex {
+            if ch == "#" {
+                result.append(number[index])
+                index = number.index(after: index)
             } else {
-                result.append(char)
+                result.append(ch)
             }
         }
-        
         return result
     }
     
