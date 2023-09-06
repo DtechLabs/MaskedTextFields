@@ -76,7 +76,8 @@ def read_ranges(csvPath):
             geocode = [v for v in rows.keys() if "Geocode:en" in v]
             
             # We use only mobile numbers in iOS
-            if rows[type].strip().strip("\"") == "MOBILE":
+            type = rows[type].strip().strip("\"")
+            if  type == "MOBILE" or "FIXED_LINE_OR_MOBILE":
                 item = {
                     "prefix": rows[prefix].strip(),
                     "lenght": rows[length].strip().split(",")

@@ -10,5 +10,7 @@ import Foundation
 enum MobilePhoneFormatterError: Error {
     
     case metadataNotFound
+    case numberNotFull
+    case incorrectSymbol
     
 }
