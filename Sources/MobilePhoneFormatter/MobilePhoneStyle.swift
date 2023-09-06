@@ -10,7 +10,6 @@ import SwiftUI
 
 public struct MobilePhoneStyle: ParseableFormatStyle {
     
-
     public var parseStrategy = MobilePhoneParseStrategy()
     let mask: String?
     

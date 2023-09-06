@@ -43,4 +43,18 @@ public struct MobilePhone {
         return result
     }
     
+    public func isValid(_ mask: String?) -> Bool {
+        guard let mask = mask else {
+            return true
+        }
+        
+        let digitCount = mask.filter { $0 == "#" }.count
+        
+        guard digitCount == number.count else {
+            return false
+        }
+        
+        return true
+    }
+    
 }
