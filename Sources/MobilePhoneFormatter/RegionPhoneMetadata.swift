@@ -33,6 +33,8 @@ public struct RegionPhoneMetadata: Codable, Hashable {
         public static func < (lhs: RegionPhoneMetadata.Range, rhs: RegionPhoneMetadata.Range) -> Bool {
             lhs.prefix < rhs.prefix
         }
+        
+        var clearPrefix: String { String(prefix.prefix(while: { $0 != "[" })) }
     }
     
     public struct Example: Codable, Hashable {
