@@ -19,20 +19,40 @@ final class MobilePhoneFormatterTests: XCTestCase {
         
         let region = regions["US"]!
         
-        try region.examples.forEach { item in
-            // First step detect range
-            let range = try region.ranges.sorted().first {
-                let regex = try Regex("^\($0.prefix)")
-                return item.number.matches(of: regex).count > 0
+        measure {
+            do {
+                try region.examples.forEach { item in
+                    // First step detect range
+                    let range = try region.ranges.sorted().first {
+                        let regex = try Regex("^\($0.prefix)")
+                        return item.number.matches(of: regex).count > 0
+                    }
+                    
+                    XCTAssertNotNil(range)
+                    
+                    let formatId = range?.format
+                    XCTAssertNotNil(formatId)
+                    
+                    let format = region.formats.first { $0.id == formatId }
+                    XCTAssertNotNil(format)
+                    
+                    print(item.region, item.number, format!.national)
+                }
+            } catch {
+                print(error)
             }
-            
-            XCTAssertNotNil(range)
-            
-            let formatId = range?.format
-            XCTAssertNotNil(formatId)
-            
-            let format = region.formats.first { $0.id == formatId }
-            XCTAssertNotNil(format)
+        }
+    }
+    
+    func testSelectFormatFast() {
+        let region = regions["US"]!
+        let selector = PhoneMaskSelector(region)
+        
+        measure {
+            region.examples.forEach { item in
+                let mask = selector.selectMask(item.number)
+                print(item.region, item.number, mask ?? "not found")
+            }
         }
     }
     

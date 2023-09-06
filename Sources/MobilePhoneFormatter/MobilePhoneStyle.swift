@@ -1,5 +1,5 @@
 //
-//  MobilePhoneParseStrategy.swift
+//  MobilePhoneStyle.swift
 //  MobilePhoneFormatter
 //
 //  Created by Yuri on 05.09.2023.
