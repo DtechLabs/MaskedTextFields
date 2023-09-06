@@ -11,7 +11,7 @@ final class MobilePhoneFormatterTests: XCTestCase {
     }()
     
     func testInitialize() throws {
-        let formatter = try MobilePhoneFormatter()
+        let formatter = try Regions()
         XCTAssertEqual(formatter.metadata["US"]?.code, 1)
     }
     
@@ -20,8 +20,6 @@ final class MobilePhoneFormatterTests: XCTestCase {
         let region = regions["US"]!
         
         try region.examples.forEach { item in
-            print("Number", item.region, item.number)
-            
             // First step detect range
             let range = try region.ranges.sorted().first {
                 let regex = try Regex("^\($0.prefix)")
