@@ -21,7 +21,18 @@ public class PhoneMaskSelector {
         self.ranges = region?.ranges.sorted()
     }
     
-    public func selectMask(_ phone: String) -> String? {
+    public func selectFormat(_ phone: String) -> RegionPhoneMetadata.Format? {
+        guard
+            let range = selectRange(phone),
+            let formatId = range.format
+        else {
+            return nil
+        }
+        
+        return region?.formats.first(where: { $0.id == formatId })
+    }
+    
+    public func selectRange(_ phone: String) -> RegionPhoneMetadata.Range? {
         defer {
             oldNumber = phone
         }
@@ -29,7 +40,7 @@ public class PhoneMaskSelector {
         if !oldNumber.isEmpty && phone.hasPrefix(oldNumber) {
             
             if let range = range, checkPrefix(range.prefix, phone: phone) {
-                return range.format
+                return range
             }
             
             candidates = candidates?.filter {
@@ -45,7 +56,7 @@ public class PhoneMaskSelector {
             range = candidates?.first { checkPrefix($0.prefix, phone: phone) }
         }
         
-        return range?.format
+        return range
     }
     
     private func checkPrefix(_ prefix: String, phone: String) -> Bool {

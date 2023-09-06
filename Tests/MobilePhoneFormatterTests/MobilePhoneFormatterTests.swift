@@ -36,7 +36,7 @@ final class MobilePhoneFormatterTests: XCTestCase {
                     let format = region.formats.first { $0.id == formatId }
                     XCTAssertNotNil(format)
                     
-                    print(item.region, item.number, format!.national)
+                    print(item.region, item.number, format!.national ?? "")
                 }
             } catch {
                 print(error)
@@ -50,7 +50,7 @@ final class MobilePhoneFormatterTests: XCTestCase {
         
         measure {
             region.examples.forEach { item in
-                let mask = selector.selectMask(item.number)
+                let mask = selector.selectFormat(item.number)?.national
                 print(item.region, item.number, mask ?? "not found")
             }
         }
