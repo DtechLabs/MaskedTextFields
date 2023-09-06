@@ -10,40 +10,20 @@ import SwiftUI
 
 public struct MobilePhoneStyle: ParseableFormatStyle {
     
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(region?.code)
-    }
-    
-    public static func == (lhs: MobilePhoneStyle, rhs: MobilePhoneStyle) -> Bool {
-        lhs.region?.code == rhs.region?.code
-    }
-    
+
     public var parseStrategy = MobilePhoneParseStrategy()
-    let region: RegionPhoneMetadata?
-    let maskSelector: PhoneMaskSelector
+    let mask: String?
     
-    public init(_ region: RegionPhoneMetadata?) {
-        self.region = region
-        self.maskSelector = PhoneMaskSelector(region)
+    public init(_ mask: String?) {
+        self.mask = mask
     }
     
     public func format(_ value: MobilePhone) -> String {
-        let mask = maskSelector.selectMask(value.number)
+        guard let mask = mask else {
+            return value.number
+        }
         return value.format(by: mask)
     }
-    
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(region)
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let region = try container.decode(RegionPhoneMetadata.self)
-        self.region = region
-        maskSelector = PhoneMaskSelector(region)
-    }
-    
 }
 
 public struct MobilePhoneParseStrategy: ParseStrategy {
@@ -56,8 +36,8 @@ public struct MobilePhoneParseStrategy: ParseStrategy {
 
 public extension FormatStyle where Self == MobilePhoneStyle {
     
-    static func mobilePhone(_ region: RegionPhoneMetadata?) -> MobilePhoneStyle {
-        MobilePhoneStyle(region)
+    static func mobilePhone(_ mask: String?) -> MobilePhoneStyle {
+        MobilePhoneStyle(mask)
     }
     
 }
