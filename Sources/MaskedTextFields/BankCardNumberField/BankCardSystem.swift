@@ -94,7 +94,9 @@ public extension BankCardIssuer {
     }
     
     static func selectMask(_ number: String) -> String? {
-        guard let length = length.first(where: { number.count < $0 }) else {
+        let fullLength = length.first { number.count == $0 }
+        let partLength = length.first(where: { number.count < $0 })
+        guard let length = fullLength ?? partLength else {
             return nil
         }
         
@@ -160,6 +162,7 @@ public enum DinersClubCarteBlancheBankCard: BankCardIssuer {
     public static let system: BankCardSystem = .DinersClubCarteBlanche
     public static let ranges: [ClosedRange<Int>]? = [300...305]
     public static let length: [Int] = [14]
+    public static var pattern: [Int : String] = [14: "#### #### #### ##"]
     
 }
 
@@ -168,6 +171,7 @@ public enum DinersClubInternationalBankCard: BankCardIssuer {
     public static let system: BankCardSystem = .DinersClubInternational
     public static let range: [Int] = [36, 38, 39, 309]
     public static let length: [Int] = [14]
+    public static var pattern: [Int : String] = [14: "#### #### #### ##"]
     
 }
 
