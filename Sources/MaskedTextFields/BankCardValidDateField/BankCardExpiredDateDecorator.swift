@@ -14,14 +14,21 @@ import Foundation
 
 struct BankCardExpiredDateDecorator: TextFieldDecorator {
    
+    let mask = "## / ##"
     let characterSet = CharacterSet.decimalDigits
     
     func applyMask(_ text: String?) -> String? {
-        text?.uppercased()
+        guard let text = text, !text.isEmpty else {
+            return text
+        }
+        return applyMask(mask: mask, to: text)
     }
     
     func removeMask(_ text: String?) -> String? {
-        text
+        guard let text = text, !text.isEmpty else {
+            return text
+        }
+        return String(text.filter { $0.isNumber })
     }
     
     func shouldChange(_ text: String?, with string: String, in range: NSRange) -> Bool {

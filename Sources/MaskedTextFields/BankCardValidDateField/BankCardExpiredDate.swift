@@ -36,23 +36,15 @@ public struct BankCardExpiredDate: CustomStringConvertible {
         text = ""
         self.separator = separator
     }
-    
-    public init?(_ text: String, separator: String = "/") {
-        let chunks = text.split(separator: separator)
-        guard 
-            chunks.count == 2,
-            let month = Int(chunks[0]),
-            let year = Int(chunks[1])
-        else {
-            return nil
-        }
-        self.text = [month.description, year.description].joined()
+
+    public init(_ text: String, separator: String = "/") {
+        self.text = text
         self.separator = separator
     }
     
     public var date: Date? {
         guard
-            let date = DateComponents(year: year, month: month, day: 1).date,
+            let date = DateComponents(year: year, month: month, day: 1, hour: 23, minute: 99).date,
             let expiredDate = Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: date)
         else {
             return nil
