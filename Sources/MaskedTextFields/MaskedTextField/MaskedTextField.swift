@@ -20,6 +20,7 @@ public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
     let field: Field
     let keyboardToolbarBuilder: KeyboardToolbarBuilder?
     private let setProperties: ((UITextField) -> Void)?
+    private let textField = UITextField(frame: .zero)
     
     var masketText: String? {
         mutating get { mask.applyMask(value) }
@@ -45,7 +46,6 @@ public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
     }
     
     public func makeUIView(context: Context) -> UITextField {
-        let textField = UITextField(frame: .zero)
         textField.delegate = context.coordinator
         textField.placeholder = placeholder
         textField.backgroundColor = .clear
@@ -125,15 +125,15 @@ public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
         
         @objc
         func hideKeyboard() {
-            print("MaskedTextField trying paste")
             parent.focused.wrappedValue = nil
+            parent.textField.resignFirstResponder()
         }
         
         @objc
         func paste() {
-            print("MaskedTextField trying paste")
             if let string = UIPasteboard.general.string {
-                parent.value = string
+                let range = NSRange(parent.textField.text ?? "") ?? NSRange()
+                let _ = textField(parent.textField, shouldChangeCharactersIn: range, replacementString: string)
             }
         }
     }

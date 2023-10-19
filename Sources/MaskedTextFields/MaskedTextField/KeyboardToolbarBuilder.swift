@@ -1,5 +1,5 @@
 //
-//  KeyboardToolbarItem.swift
+//  KeyboardToolbarBuilder.swift
 //  MaskedTextFields
 //
 //  Created by Yuri on 18.10.2023.
@@ -21,6 +21,20 @@ public struct KeyboardToolbarBuilder {
     let leftPadding: Bool
     let tintColor: UIColor
     var height: CGFloat = 44
+    
+    init(
+        observer: KeyboardToolbarHandler? = nil,
+        items: [KeyboardToolbarItem],
+        leftPadding: Bool = false,
+        tintColor: UIColor,
+        height: CGFloat = 44
+    ) {
+        self.observer = observer
+        self.items = items
+        self.leftPadding = leftPadding
+        self.tintColor = tintColor
+        self.height = height
+    }
     
     func build() -> UIToolbar {
         let rect = CGRect(origin: .zero, size: CGSize(width: UIScreen.main.bounds.width, height: height))

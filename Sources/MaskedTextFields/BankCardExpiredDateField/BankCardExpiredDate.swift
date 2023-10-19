@@ -22,14 +22,15 @@ public struct BankCardExpiredDate: CustomStringConvertible {
         guard let last = Int(text.dropFirst(2)) else {
             return nil
         }
-        return 2000 + last
+        
+        return last < 100 ? 2000 + last : last
     }
     
-    var text: String
+    public internal(set) var text: String
     private let separator: String
     
     public var description: String {
-        [text.prefix(2), text.dropFirst(2)].joined(separator: separator)
+        [String(text.prefix(2)), separator, String(text.dropFirst(2))].joined(separator: " ")
     }
     
     public init(separator: String = "/") {
@@ -43,12 +44,17 @@ public struct BankCardExpiredDate: CustomStringConvertible {
     }
     
     public var date: Date? {
+        print("Generate date", text, year, month)
+        let components = DateComponents(year: year, month: month, day: 1)
         guard
-            let date = DateComponents(year: year, month: month, day: 1, hour: 23, minute: 99).date,
-            let expiredDate = Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: date)
+            let date = Calendar.current.date(from: components),
+            let expiredDate = Calendar.current.date(byAdding: DateComponents(month: 1), to: date)
         else {
+            print("Generate date failed", DateComponents(year: year, month: month, day: 1).date)
             return nil
         }
+        
+        print("Generate date", expiredDate.formatted())
         return expiredDate
     }
     
