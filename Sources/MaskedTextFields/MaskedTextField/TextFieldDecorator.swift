@@ -18,3 +18,21 @@ public protocol TextFieldDecorator {
     func shouldChange(_ text: String?, with string: String, in range: NSRange) -> Bool
     
 }
+
+extension TextFieldDecorator {
+    
+    func applyMask(mask: String, digitMask: Character = "#", to text: String) -> String {
+        var result = ""
+        var index = text.startIndex
+        for ch in mask where index < text.endIndex {
+            if ch == digitMask {
+                result.append(text[index])
+                index = text.index(after: index)
+            } else {
+                result.append(ch)
+            }
+        }
+        return result
+    }
+    
+}
