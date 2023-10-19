@@ -18,19 +18,22 @@ public struct BankCardHolderField<FieldId: Hashable>: View {
     let focused: FocusState<FieldId?>.Binding
     let fieldId: FieldId
     let textColor: Color
+    let toolBarTint: Color
     
     public init(
         placeholder: String,
         holderName: Binding<String>,
         focused: FocusState<FieldId?>.Binding,
         fieldId: FieldId,
-        textColor: Color
+        textColor: Color,
+        toolBarTint: Color
     ) {
         self.placeholder = placeholder
         self._holderName = holderName
         self.focused = focused
         self.fieldId = fieldId
         self.textColor = textColor
+        self.toolBarTint = toolBarTint
     }
     
     public var body: some View {
@@ -39,10 +42,13 @@ public struct BankCardHolderField<FieldId: Hashable>: View {
             value: $holderName,
             mask: BankCardHolderDecorator(),
             focused: focused,
-            field: fieldId
+            field: fieldId,
+            keyboardToolbarBuilder: KeyboardToolbarBuilder(items: [.paste, .hideKeyboard], tintColor: UIColor(toolBarTint))
         ) { textField in
             textField.textColor = UIColor(textColor)
             textField.tintColor = UIColor(textColor)
+            textField.keyboardType = .asciiCapable
+            textField.autocorrectionType = .no
         }
     }
     

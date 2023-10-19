@@ -30,7 +30,7 @@ struct BankCardNumberDecorator: TextFieldDecorator {
     
     mutating func applyMask(_ text: String?) -> String? {
         guard
-            let text = text,
+            let text = removeMask(text),
             !text.isEmpty
         else {
             return text

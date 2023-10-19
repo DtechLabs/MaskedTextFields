@@ -44,17 +44,14 @@ public struct BankCardExpiredDate: CustomStringConvertible {
     }
     
     public var date: Date? {
-        print("Generate date", text, year, month)
         let components = DateComponents(year: year, month: month, day: 1)
         guard
             let date = Calendar.current.date(from: components),
             let expiredDate = Calendar.current.date(byAdding: DateComponents(month: 1), to: date)
         else {
-            print("Generate date failed", DateComponents(year: year, month: month, day: 1).date)
             return nil
         }
         
-        print("Generate date", expiredDate.formatted())
         return expiredDate
     }
     
