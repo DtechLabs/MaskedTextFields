@@ -14,11 +14,17 @@ import Foundation
 
 struct BankCardExpiredDateDecorator: TextFieldDecorator {
    
-    let mask = "## / ##"
+    let mask: String
+    let length: Int
     let characterSet = CharacterSet.decimalDigits
     
+    init(fourDigitsYear: Bool = false, separator: String = "/") {
+        self.length = fourDigitsYear ? 6 : 4
+        self.mask =  ["##", separator, fourDigitsYear ? "####" : "##"].joined(separator: " ")
+    }
+    
     func applyMask(_ text: String?) -> String? {
-        guard let text = text, !text.isEmpty else {
+        guard let text = removeMask(text), !text.isEmpty else {
             return text
         }
         return applyMask(mask: mask, to: text)
@@ -36,7 +42,8 @@ struct BankCardExpiredDateDecorator: TextFieldDecorator {
             return false
         }
         
-        guard text?.replacing(string, in: range).count ?? 0 <= 4 else {
+        let result = text?.replacing(string, in: range)
+        guard removeMask(result)?.count ?? 0 <= length else {
             return false
         }
         
