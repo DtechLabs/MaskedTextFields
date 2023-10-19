@@ -1,6 +1,6 @@
 import XCTest
 import RegexBuilder
-@testable import MobilePhoneFormatter
+@testable import MaskedTextFields
 
 final class MobilePhoneFormatterTests: XCTestCase {
     
