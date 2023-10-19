@@ -44,10 +44,10 @@ public struct BankCardExpiredDate: CustomStringConvertible {
     }
     
     public var date: Date? {
-        let components = DateComponents(year: year, month: month, day: 1)
+        let components = DateComponents(year: year, month: month, day: 1, minute: 0, second: 0)
         guard
             let date = Calendar.current.date(from: components),
-            let expiredDate = Calendar.current.date(byAdding: DateComponents(month: 1), to: date)
+            let expiredDate = Calendar.current.date(byAdding: DateComponents(month: 1, minute: -1), to: date)
         else {
             return nil
         }
