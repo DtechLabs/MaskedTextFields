@@ -44,6 +44,13 @@ public struct BankCardExpiredDate: CustomStringConvertible {
     }
     
     public var date: Date? {
+        guard
+            let year = year,
+            let month = month,
+            month >= 12
+        else {
+            return nil
+        }
         let components = DateComponents(year: year, month: month, day: 1, minute: 0, second: 0)
         guard
             let date = Calendar.current.date(from: components),
