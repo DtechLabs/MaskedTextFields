@@ -25,8 +25,8 @@ public enum BankCardValidator {
     /// - Parameter name: Holder name
     /// - Returns: `true` if valid
     public static func isHolderNameValid(_ name: String) -> Bool {
-        // holder name must be at least 3 symbols and maximum 22
-        guard 3...22 ~= name.count else {
+        // holder name must be at least 2 symbols and maximum 22
+        guard 2...22 ~= name.count else {
             return false
         }
         let characterSet = CharacterSet(charactersIn: "ABCDEFGHIJKLKMNOPQRSTUVWXYZ '~`.-")
