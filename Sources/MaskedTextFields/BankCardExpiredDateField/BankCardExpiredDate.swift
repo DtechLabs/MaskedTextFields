@@ -47,7 +47,7 @@ public struct BankCardExpiredDate: CustomStringConvertible {
         guard
             let year = year,
             let month = month,
-            month >= 12
+            1...12 ~= month
         else {
             return nil
         }
