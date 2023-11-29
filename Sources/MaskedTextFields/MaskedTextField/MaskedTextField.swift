@@ -65,7 +65,9 @@ public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
     
     public func updateUIView(_ uiView: UITextField, context: Context) {
         DispatchQueue.main.async {
-            if mask.applyMask(uiView.text) != uiView.text {
+            if focused.wrappedValue != field && uiView.text != mask.applyMask(uiView.text) {
+                uiView.text = mask.applyMask(value)
+            } else if mask.applyMask(uiView.text) != uiView.text {
                 uiView.text = mask.applyMask(uiView.text)
             }
         }
