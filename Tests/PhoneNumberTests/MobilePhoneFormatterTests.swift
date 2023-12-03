@@ -3,29 +3,23 @@ import RegexBuilder
 @testable import PhoneNumberField
 
 final class MobilePhoneFormatterTests: XCTestCase {
-    
-    lazy var regions: [String: RegionPhoneMetadata] = {
-        let path = Bundle.module.path(forResource: "metadata", ofType: "json")!
-        let data = try! Data(contentsOf: URL(filePath: path))
-        return try! JSONDecoder().decode([String: RegionPhoneMetadata].self, from: data)
-    }()
-    
+
     func testInitialize() throws {
         let formatter = try Regions()
         XCTAssertEqual(formatter.metadata["US"]?.code, 1)
     }
     
-    func testSelectFormatFast() {
-        let region = regions["US"]!
-        let selector = PhoneMaskSelector(region)
-        
-        measure {
-            region.examples.forEach { item in
-                let mask = selector.selectFormat(item.number)?.national
-                print(item.region, item.number, mask ?? "not found")
-            }
-        }
-    }
+//    func testSelectFormatFast() {
+//        let region = regions["US"]!
+//        let selector = PhoneMaskSelector(region)
+//        
+//        measure {
+//            region.examples.forEach { item in
+//                let mask = selector.selectFormat(item.number)?.national
+//                print(item.region, item.number, mask ?? "not found")
+//            }
+//        }
+//    }
     
     func testCleanNumber() throws {
         XCTAssertEqual(try PhoneNumber("+1(213) 465-3993").number, "12134653993")

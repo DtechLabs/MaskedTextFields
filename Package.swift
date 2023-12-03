@@ -26,10 +26,7 @@ let package = Package(
         ),
         .target(
             name: "PhoneNumberField",
-            dependencies: ["MaskedTextFields"],
-            resources: [
-                .process("Metadata/metadata.json")
-            ]
+            dependencies: ["MaskedTextFields"]
         ),
         .testTarget(
             name: "MaskedTextFieldsTests",

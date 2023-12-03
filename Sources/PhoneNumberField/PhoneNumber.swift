@@ -12,27 +12,17 @@ public struct PhoneNumber {
     /// Clean phone number  without any additional symbols  like 123456789
     public private(set) var number: String
     /// County code in Alpha-2 format: US, FR, DE and e.t.c
-    public var country: String {
-        didSet {
-            region = Self.regions[country]
-        }
-    }
+    public private(set) var country: String
     
     let allowedChars = Set("0123456789()-+ ")
     let digitMaskSymbol: Character = "X"
     
     public var region: RegionPhoneMetadata?
     
-    static var regions: [String: RegionPhoneMetadata] = {
-        let path = Bundle.module.path(forResource: "metadata", ofType: "json")!
-        let data = try! Data(contentsOf: URL(filePath: path))
-        return try! JSONDecoder().decode([String: RegionPhoneMetadata].self, from: data)
-    }()
-    
     public init(country: String? = nil) {
         self.number = ""
         self.country = country ?? Locale.current.region?.identifier ?? ""
-        self.region = Self.regions[self.country]
+        self.region = AllRegionsPhoneMetadata[self.country]
     }
     
     public init(_ number: String, country: String? = nil) throws {
@@ -41,7 +31,7 @@ public struct PhoneNumber {
         }
         self.number = number.components(separatedBy: .decimalDigits.inverted).joined()
         self.country = country ?? Locale.current.region?.identifier ?? ""
-        self.region = Self.regions[self.country]
+        self.region = AllRegionsPhoneMetadata[self.country]
     }
     
     public func format(by mask: String?) -> String {
@@ -101,22 +91,16 @@ public struct PhoneNumber {
         return false
     }
     
-//    func regions() -> [String: RegionPhoneMetadata] {
-//        let path = Bundle.module.path(forResource: "metadata", ofType: "json")!
-//        let data = try! Data(contentsOf: URL(filePath: path))
-//        return try! JSONDecoder().decode([String: RegionPhoneMetadata].self, from: data)
-//    }
-    
     func selectRange() -> RegionPhoneMetadata.Range? {
         guard var region = region else {
             return nil
         }
         
-        for index in region.ranges.indices {
-            if (try? region.ranges[index].prefixRegex.prefixMatch(in: number)) != nil {
-                return region.ranges[index]
-            }
-        }
+//        for index in region.ranges.indices {
+//            if (try? region.ranges[index].prefixRegex.prefixMatch(in: number)) != nil {
+//                return region.ranges[index]
+//            }
+//        }
         
         return nil
     }

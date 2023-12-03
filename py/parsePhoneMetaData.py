@@ -23,9 +23,9 @@ def make_metadata_json(csvPath):
                     region["timezone"] = timezone
             
             if rows["NationalPrefix"] is not None:
-                nationalPrefix = rows["NationalPrefix"].strip().strip("\"")
+                nationalPrefix = rows["NationalPrefix"].strip()
                 if nationalPrefix:
-                    region["nationalPrefix"] = nationalPrefix
+                    region["nationalPrefix"] = nationalPrefix if type(nationalPrefix) is list else "[{prefix}]".format(prefix=nationalPrefix)
 
             if rows["Prefix"] is not None:
                 prefix = rows["Prefix"].strip()
@@ -35,7 +35,7 @@ def make_metadata_json(csvPath):
             if rows["ExtraRegion"] is not None:
                 extraRegion = rows["ExtraRegion"].strip()
                 if extraRegion:
-                    region["extraRegion"] = extraRegion
+                    region["extraRegion"] = extraRegion if type(extraRegion) is list else "[{region}]".format(region=extraRegion)
 
             data[key] = region
 
@@ -82,23 +82,25 @@ def read_ranges(csvPath):
             format = [v for v in rows.keys() if "Format" in v]
             
             # We use only mobile numbers in iOS
-            item = {
-                "type": rows[type].strip(),
-                "prefix": '"{pref}"'.format(pref=rows[prefix].strip()),
-                "length": list(map(lambda n: n.strip("\'"), rows[length].strip().split(",")))
-            }
+            kind = rows[type].strip()
+            if kind == "MOBILE" or kind == "FIXED_LINE_OR_MOBILE":
+                item = {
+                    "type": kind,
+                    "prefix": '"{pref}"'.format(pref=rows[prefix].strip()),
+                    "length": list(map(lambda n: n.strip("\'"), rows[length].strip().split(",")))
+                }
 
-            if len(areaCodeLength) > 0:
-                if len(rows[areaCodeLength[0]].strip()) > 0:
-                    item["areaCodeLength"] = rows[areaCodeLength[0]].strip()
+                if len(areaCodeLength) > 0:
+                    if len(rows[areaCodeLength[0]].strip()) > 0:
+                        item["areaCodeLength"] = rows[areaCodeLength[0]].strip()
 
-            if len(operator) > 0 and rows[operator[0]]:
-                item["operator"] = rows[operator[0]].strip()
+                if len(operator) > 0 and rows[operator[0]]:
+                    item["operator"] = rows[operator[0]].strip()
 
-            if len(format) > 0 and rows[format[0]]:
-                item["format"] = rows[format[0]].strip()
+                if len(format) > 0 and rows[format[0]]:
+                    item["format"] = rows[format[0]].strip()
 
-            data.append(item)
+                data.append(item)
 
     return data
 
@@ -164,42 +166,74 @@ def read_examples(csvPath):
 
         return data
 
-def save_formats(formats):
-    template = "\n\t\t.init(id: {id}, national: {national}, international: {international})"
+def save_formats(formats, existed):
+    template = "\n\t\t.init({id}, {national}, {international}),"
+    templateLast = "\n\t\t.init({id}, {national}, {international})"
     buffer = []
 
-    for format in formats:
+    filtered = [item for item in formats if item not in existed]
+    for format in filtered:
         id = format["id"]
-        national = format["national"] if "national" in format.keys() else "nil"
-        international = format["international"] if "international" in format.keys() else "nil"
-        buffer.append(template.format(id=id, national=national, international=international))
+        national = format["national"] if "national" in format.keys() and format["national"] else "nil"
+        international = format["international"] if "international" in format.keys() and format["international"] else "nil"
+        if format == filtered[-1]:
+            buffer.append(templateLast.format(id=id, national=national, international=international))
+        else:
+            buffer.append(template.format(id=id, national=national, international=international))
 
     return buffer
 
 def save_operators(operators):
-    template = '\n\t\t.init(id: "{id}", name: {name})'
+    template = '\n\t\t.init("{id}", {name})'
     buffer = []
 
     for operator in operators:
         operatorId = operator["operatorId"]
-        name = operator["name"]
-        buffer.append(template.format(id=operatorId, name=name))
+        name = operator["name"] if "name" in operator and operator["name"] else "nil"
+        if operatorId != "__unknown":
+            buffer.append(template.format(id=operatorId, name=name))
 
     return buffer
 
 def save_ranges(ranges):
-    template = "\n\t\t.init(prefix: {prefix}, length: {length}, areaCodeLength: {areaCodeLength}, operator: {operator}, format: {format})"
+    # template = "\n\t\t.init({prefix}, {length}, {areaCodeLength}, {operator}, {format})"
+    template = "\n\t\t.init({prefix}, {length}, {format}),"
+    templateLast = "\n\t\t.init({prefix}, {length}, {format})"
     buffer = []
 
     for range in ranges:
         prefix = range["prefix"]
         length = range["length"]
-        areaCodeLength = range["areaCodeLength"] if "areaCodeLength" in range else "nil"
-        operator = range["operator"] if "operator" in range and range["operator"] else "nil"
-        format = range["format"] if "format" in range else "nil"
-        buffer.append(template.format(prefix=prefix, length=length, areaCodeLength=areaCodeLength, operator=operator, format=format))
-    
-    return buffer
+        # areaCodeLength = range["areaCodeLength"] if "areaCodeLength" in range else "nil"
+        # operator = range["operator"] if "operator" in range and range["operator"] else "nil"
+        format = range["format"] if "format" in range and range["format"] else "nil"
+        
+        is_found = False
+        for (index, item) in enumerate(buffer):
+            if item["format"] == format and item["length"] == length:
+                buffer[index]["prefix"].append(prefix.strip("\""))
+                is_found = True
+                break
+
+        if not is_found:
+            buffer.append({
+                "prefix": [prefix.strip("\"")],
+                "length": length,
+                "format": format
+            })
+        else:   
+            continue
+            
+        # buffer.append(template.format(prefix=prefix, length=length, areaCodeLength=areaCodeLength, operator=operator, format=format))
+
+    ranges = []
+    for item in buffer:
+        if item == buffer[-1]:
+            ranges.append(templateLast.format(prefix=item["prefix"], length=item["length"], format=item["format"]))
+        else:
+            ranges.append(template.format(prefix=item["prefix"], length=item["length"], format=item["format"]))
+
+    return (ranges, list(map(lambda f: f["format"], buffer)))
 
 def save_regions(file, region):
     template = """//
@@ -219,12 +253,12 @@ let RegionPhoneMetadata_{code} = RegionPhoneMetadata(
     prefix: #prefix#,
     extraRegion: #extraRegion#,
     formats: [
-    operators: [
     ranges: [
 )
 """.format(code=region['code'])
     
     for line in template.split("\n"):
+        ranges, formats = save_ranges(region["ranges"])
         if line.find("#timezone#") != -1:
             if "timezone" in region:
                 file.write(line.replace('#timezone#', region["timezone"]))
@@ -245,22 +279,75 @@ let RegionPhoneMetadata_{code} = RegionPhoneMetadata(
             file.write("\n")
         elif line.find("formats: [") != -1:
             file.write(line)
-            for line in save_formats(region["formats"]):
+            for line in save_formats(region["formats"], formats):
                 file.write(line)
-            file.write("\n\t],\n")
-        elif line.find("operators: [") != -1:
-            file.write(line)
-            for line in save_operators(region["operators"]):
-                file.write(line)
-            file.write("\n\t],\n")
+            file.write("\n\t\t],\n")
+        # elif line.find("operators: [") != -1:
+        #     file.write(line)
+        #     for line in save_operators(region["operators"]):
+        #         file.write(line)
+        #     file.write("\n\t],\n")
         elif line.find("ranges: [") != -1:
             file.write(line)
-            for line in save_ranges(region["ranges"]):
+            for line in ranges:
+                file.write(line.replace("'", '"'))
+            file.write("\n\t\t]\n")
+        else:
+            file.write(line)
+            file.write("\n")
+
+def save_others_regions(file, region):
+    template = """let RegionPhoneMetadata_{code} = RegionPhoneMetadata(
+    code: {code},
+    timezone: #timezone#,
+    nationalPrefix: #nationalPrefix#,
+    prefix: #prefix#,
+    extraRegion: #extraRegion#,
+    formats: [
+    ranges: [
+)
+""".format(code=region['code'])
+    
+    for line in template.split("\n"):
+        ranges, formats = save_ranges(region["ranges"])
+        if line.find("#timezone#") != -1:
+            if "timezone" in region:
+                file.write(line.replace('#timezone#', region["timezone"]))
+                file.write("\n")
+        elif line.find("#nationalPrefix#") != -1:
+            if "nationalPrefix" in region:
+                file.write(line.replace('#nationalPrefix#', region["nationalPrefix"]))
+                file.write("\n")
+        elif line.find("#prefix#") != -1:
+            if "prefix" in region:
+                file.write(line.replace('#prefix#', region["prefix"]))
+                file.write("\n")
+        elif line.find("#extraRegion#") != -1:
+            if "extraRegion" in region:
+                file.write(line.replace('#extraRegion#', region["extraRegion"]))
+            else:
+                file.write(line.replace('#extraRegion#', "[]"))
+            file.write("\n")
+        elif line.find("formats: [") != -1:
+            file.write(line)
+            for line in save_formats(region["formats"], formats):
+                file.write(line)
+
+            file.write("\n\t],\n")
+        # elif line.find("operators: [") != -1:
+        #     file.write(line)
+        #     for line in save_operators(region["operators"]):
+        #         file.write(line)
+        #     file.write("\n\t],\n")
+        elif line.find("ranges: [") != -1:
+            file.write(line)
+            for line in ranges:
                 file.write(line.replace("'", '"'))
             file.write("\n\t]\n")
         else:
             file.write(line)
             file.write("\n")
+
 
 def save_allRegions(data):
     header = """//
@@ -305,14 +392,23 @@ if __name__ == '__main__':
     except AttributeError:
         print("Attribute Error:")
 
-    for region in data:
-        data[region]["operators"] = read_operators(f"metadata/{data[region]['code']}/operators.csv")
-        data[region]["ranges"] = read_ranges(f"metadata/{data[region]['code']}/ranges.csv")
-        data[region]["formats"] = read_formats(f"metadata/{data[region]['code']}/formats.csv")
+    others = "../Sources/PhoneNumberField/Metadata/metadata_others.swift"
+    if not os.path.exists("../Sources/PhoneNumberField/Metadata"):
+        os.makedirs("../Sources/PhoneNumberField/Metadata")
 
-        filename = "../Sources/PhoneNumberField/Metadata/metadata_{code}.swift".format(code=data[region]['code'])
-        with open(filename, 'w', encoding='utf-8') as swift_file:
-            save_regions(swift_file, data[region])
+    with open(others, 'w', encoding='utf-8') as others_swift_file:
+        for region in data:
+            data[region]["operators"] = read_operators(f"metadata/{data[region]['code']}/operators.csv")
+            data[region]["ranges"] = read_ranges(f"metadata/{data[region]['code']}/ranges.csv")
+            data[region]["formats"] = read_formats(f"metadata/{data[region]['code']}/formats.csv")
+
+            code = data[region]['code']
+            if code in [1, 91, 86, 55]:
+                filename = "../Sources/PhoneNumberField/Metadata/metadata_{code}.swift".format(code=code)
+                with open(filename, 'w', encoding='utf-8') as swift_file:
+                    save_regions(swift_file, data[region])
+            else:
+                save_others_regions(others_swift_file, data[region])
 
     save_allRegions(data)
 

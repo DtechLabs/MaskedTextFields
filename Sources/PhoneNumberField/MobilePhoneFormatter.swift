@@ -12,14 +12,8 @@ public struct Regions {
     
     let metadata: [String: RegionPhoneMetadata]
     
-    public init() throws {
-        // Initial load metadata
-        guard let path = Bundle.module.path(forResource: "metadata", ofType: "json") else {
-            throw MobilePhoneFormatterError.metadataNotFound
-        }
-        
-        let data = try Data(contentsOf: URL(filePath: path))
-        metadata = try JSONDecoder().decode([String: RegionPhoneMetadata].self, from: data)
+    init() {
+        self.metadata = AllRegionsPhoneMetadata
     }
     
     public func metadata(for region: String) -> RegionPhoneMetadata? {
