@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  MaskedTextFieldsDemoApp
 //
-//  Created by Yuri on 01.12.2023.
+//  Created by Yury Dryhin on 01.12.2023.
 //
 
 import SwiftUI

@@ -206,7 +206,7 @@ def save_regions(file, region):
 //  RegionPhoneMetadata.swift
 //  PhoneNumberField
 //
-//  Created by Yuri on 05.09.2023.
+//  Created by Yury Dryhin on 05.09.2023.
 //  Copyright © 2023 DTechLabs. All rights reserved.
 //
 
@@ -267,7 +267,7 @@ def save_allRegions(data):
 //  RegionPhoneMetadata.swift
 //  PhoneNumberField
 //
-//  Created by Yuri on 05.09.2023.
+//  Created by Yury Dryhin on 05.09.2023.
 //  Copyright © 2023 DTechLabs. All rights reserved.
 //
 
