@@ -10,108 +10,112 @@ import Foundation
 
 public enum LengthPattern: Codable, Equatable, Hashable {
     
-    case value(UInt)
-    case range(start: UInt, end: UInt)
+    case value(Int)
+    case range(start: Int, end: Int)
+    case values([LengthPattern])
     
     init?(_ strValue: String) {
-        if let value = UInt(strValue) {
+        if let value = Int(strValue) {
             self = .value(value)
-        } else {
-            let range = strValue.split(separator: "-").compactMap { UInt($0) }
+        } else if strValue.hasPrefix("[") && strValue.hasSuffix("]") {
+            let range = strValue
+                .dropFirst().dropLast()
+                .split(separator: "-").compactMap { Int($0) }
             guard range.count == 2 else {
                 assertionFailure()
                 return nil
             }
             self = .range(start: range[0], end: range[1])
+        } else {
+            let values = strValue.split(separator: ",").compactMap { LengthPattern(String($0)) }
+            guard !values.isEmpty else {
+                assertionFailure()
+                return nil
+            }
+            self = .values(values)
         }
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
-        if let value = try? container.decode(UInt.self) {
+        if let value = try? container.decode(Int.self) {
             self = .value(value)
         } else if let strValue = try? container.decode(String.self) {
-            if let value = UInt(strValue) {
+            if let value = Int(strValue) {
                 self = .value(value)
             } else {
-                let range = strValue.split(separator: "-").compactMap { UInt($0) }
+                let range = strValue.split(separator: "-").compactMap { Int($0) }
                 guard range.count == 2 else {
                     throw DecodingError.typeMismatch(LengthPattern.self, .init(codingPath: container.codingPath, debugDescription: "Unknown range \(strValue)"))
                 }
                 self = .range(start: range[0], end: range[1])
             }
         } else {
-            throw DecodingError.typeMismatch(LengthPattern.self, .init(codingPath: container.codingPath, debugDescription: "Type should be UInt or String."))
+            throw DecodingError.typeMismatch(LengthPattern.self, .init(codingPath: container.codingPath, debugDescription: "Type should be Int or String."))
         }
     }
     
+    public func contains(_ value: Int) -> Bool {
+        switch self {
+            case .value(let int):
+                return int == value
+            case .range(let start, let end):
+                return start...end ~= value
+            case .values(let values):
+                for item in values {
+                    if item.contains(value) {
+                        return true
+                    }
+                }
+                return false
+        }
+    }
 }
 
-public struct RegionPhoneMetadata: Codable, Hashable {
+public struct RegionPhoneMetadata: Hashable, Identifiable {
+
+    public var id: String { country }
     
-    public struct Format: Codable, Hashable {
-        public let id: String
-        public var national: String?
-        public var international: String?
+    public struct GeneralDesc: Hashable {
+        public let nationalNumberPattern: String
         
-        init(_ id: String, _ national: String?, _ international: String?) {
-            self.id = id
-            self.national = national
-            self.international = international
+        init(_ nationalNumberPattern: String) {
+            self.nationalNumberPattern = nationalNumberPattern
         }
     }
     
-    /*
-    * Skipped operators for this realise
-    public struct Operator: Codable, Hashable {
-        public let id: String
-        public let name: String?
+    public struct Line: Hashable {
+        public let national: LengthPattern
+        public let localLength: LengthPattern?
+        public let pattern: String
+        public let example: String
         
-        // Use this init to create less code in hard coded data
-        init(_ id: String, _ name: String?) {
-            self.id = id
-            self.name = name
+        init(national: String, localLength: String?, pattern: String, example: String) {
+            self.national = LengthPattern(national)!
+            self.localLength = localLength != nil ? LengthPattern(localLength!)! : nil
+            self.pattern = pattern
+            self.example = example
         }
     }
-    */
     
-    public struct Range: Codable, Hashable, Equatable {
-        public let prefix: [String]
-        public let length: [LengthPattern]
-//        public let areaCodeLength: LengthPattern?
-//        public let operatorId: String?
-        public let format: String?
+    public struct Range: Hashable {
+        public let leadingDigits: String
+        public let mask: String
         
-        // Use this init to create less code in hard coded data
-        init(_ prefix: [String], _ length: [String], _ format: String?) {
-            self.prefix = prefix
-            self.length = length.compactMap { LengthPattern($0) }
-//            self.areaCodeLength = areaCodeLength
-//            self.operatorId = operatorId
-            self.format = format
-        }
-    }
-
-    public let code: UInt
-    public var timezone: String?
-    public var nationalPrefix: [String]?
-    public var prefix: String?
-    public let extraRegion: [String]?
-//    public let operators: [Operator]
-    public let formats: [Format]
-    public var ranges: [Range]
-
-}
-
-
-public extension RegionPhoneMetadata {
-    
-    func range(for number: String) throws -> Range? {
-        try ranges.first {
-            
-            let regex = try Regex("^\($0.prefix)")
-            return number.matches(of: regex).count > 0
+        var digitsCount: Int {
+            mask.filter { $0 == "X" }.count
         }
     }
     
+    public let countryCode: UInt
+    public let country: String
+    public let nationalPrefix: String?
+    public let internationalPrefix: String?
+    public let internationalPrefixCountryCode: String?
+    public let nationalPrefixFormattingRule: String?
+    public let generalDesc: GeneralDesc
+    public let mobile: Line
+    public let fixed: Line
+    public let ranges: [Range]
+
 }

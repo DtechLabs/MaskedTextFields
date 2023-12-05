@@ -22,7 +22,7 @@ public struct KeyboardToolbarBuilder {
     let tintColor: UIColor
     var height: CGFloat = 44
     
-    init(
+    public init(
         observer: KeyboardToolbarHandler? = nil,
         items: [KeyboardToolbarItem],
         leftPadding: Bool = false,
@@ -79,7 +79,7 @@ public struct KeyboardToolbarBuilder {
 }
 
 @objc
-protocol KeyboardToolbarHandler: AnyObject {
+public protocol KeyboardToolbarHandler: AnyObject {
     
     func paste()
     func hideKeyboard()

@@ -14,8 +14,8 @@ public struct PhoneNumber {
     /// County code in Alpha-2 format: US, FR, DE and e.t.c
     public private(set) var country: String
     
-    let allowedChars = Set("0123456789()-+ ")
-    let digitMaskSymbol: Character = "X"
+    private let allowedChars = Set("0123456789()-+ ")
+    private let digitMaskSymbol: Character = "X"
     
     public var region: RegionPhoneMetadata?
     
@@ -27,11 +27,24 @@ public struct PhoneNumber {
     
     public init(_ number: String, country: String? = nil) throws {
         guard allowedChars.isSuperset(of: number) else {
-            throw MobilePhoneFormatterError.incorrectSymbol
+            throw PhoneNumberError.incorrectSymbol
         }
         self.number = number.components(separatedBy: .decimalDigits.inverted).joined()
         self.country = country ?? Locale.current.region?.identifier ?? ""
         self.region = AllRegionsPhoneMetadata[self.country]
+    }
+    
+    public mutating func setNumber(_ number: String) {
+        guard allowedChars.isSuperset(of: number) else {
+            return
+        }
+        self.number = number.components(separatedBy: .decimalDigits.inverted).joined()
+    }
+    
+    public mutating func setCountry(_ country: String) -> RegionPhoneMetadata? {
+        self.region = AllRegionsPhoneMetadata[country]
+        self.country = country
+        return self.region
     }
     
     public func format(by mask: String?) -> String {
@@ -55,54 +68,15 @@ public struct PhoneNumber {
         }
         return result
     }
-    
-    public func isValid(_ mask: String?) -> Bool {
-        guard let mask = mask else {
-            return true
-        }
-        
-        let digitCount = mask.filter { $0 == digitMaskSymbol }.count
-        
-        guard digitCount == number.count else {
-            return false
-        }
-        
-        return true
-    }
 
-    public func isValid() -> Bool {
-        guard let range = selectRange() else {
-            return false
+    public func isValid() throws -> Bool {
+        guard let region = region else {
+            // Region didn't set so we cannot validate
+            throw PhoneNumberError.metadataNotFound
         }
         
-        for length in range.length {
-            switch length {
-                case .value(let value):
-                    if number.count == value {
-                        return true
-                    }
-                case .range(let start, let end):
-                    if start...end ~= UInt(number.count) {
-                        return true
-                    }
-            }
-        }
-        
-        return false
-    }
-    
-    func selectRange() -> RegionPhoneMetadata.Range? {
-        guard var region = region else {
-            return nil
-        }
-        
-//        for index in region.ranges.indices {
-//            if (try? region.ranges[index].prefixRegex.prefixMatch(in: number)) != nil {
-//                return region.ranges[index]
-//            }
-//        }
-        
-        return nil
+        let regex = try Regex(region.generalDesc.nationalNumberPattern)
+        return try regex.wholeMatch(in: number) != nil
     }
     
 }

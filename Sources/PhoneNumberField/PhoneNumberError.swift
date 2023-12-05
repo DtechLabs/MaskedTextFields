@@ -1,5 +1,5 @@
 //
-//  MobilePhoneFormatterError.swift
+//  PhoneNumberError.swift
 //
 //
 //  Created by Yury Dryhin on 05.09.2023.
@@ -7,7 +7,7 @@
 //
 import Foundation
 
-enum MobilePhoneFormatterError: Error {
+enum PhoneNumberError: Error {
     
     case metadataNotFound
     case numberNotFull
