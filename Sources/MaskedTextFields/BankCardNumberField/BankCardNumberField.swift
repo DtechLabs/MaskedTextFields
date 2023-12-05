@@ -1,7 +1,6 @@
 //
 // BankCardNumberField.swift
 // 
-//
 // Using Swift 5.0
 // Created by Yury Dryhin on 04.10.2023
 // email: yuri.drigin@icloud.com

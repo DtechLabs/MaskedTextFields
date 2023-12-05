@@ -126,13 +126,13 @@ public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
         }
         
         @objc
-        func hideKeyboard() {
+        public func hideKeyboard() {
             parent.focused.wrappedValue = nil
             parent.textField.resignFirstResponder()
         }
         
         @objc
-        func paste() {
+        public func paste() {
             if let string = UIPasteboard.general.string {
                 let range = NSRange(parent.textField.text ?? "") ?? NSRange()
                 let _ = textField(parent.textField, shouldChangeCharactersIn: range, replacementString: string)

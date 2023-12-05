@@ -2,7 +2,7 @@
 //  BankCardValidatorTests.swift
 //  
 //
-//  Created by Yuri on 19.10.2023.
+//  Created by Yury Dryhin on 19.10.2023.
 //
 
 import XCTest
