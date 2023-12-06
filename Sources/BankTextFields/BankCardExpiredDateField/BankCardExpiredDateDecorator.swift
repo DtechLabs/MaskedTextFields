@@ -1,16 +1,16 @@
 //
 // BankCardExpiredDateDecorator.swift
-//
+// BankTextFields
 //
 // Using Swift 5.0
-// Created by Yury Dryhin on 05.10.2023
+// Created by Yury Dryhin on December 2023
 // email: yuri.drigin@icloud.com
 // LinkedIn: https://www.linkedin.com/in/dtechlabs/
 // Copyright © 2023  DTechLabs. All rights reserved.
 //
         
-
 import Foundation
+import MaskedTextFields
 
 struct BankCardExpiredDateDecorator: TextFieldDecorator {
    

@@ -10,7 +10,7 @@
 //
         
 import XCTest
-@testable import MaskedTextFields
+@testable import BankTextFields
 
 final class BankCardNumberTests: XCTestCase {
  

@@ -15,18 +15,26 @@ let package = Package(
         .library(
             name: "PhoneNumberField",
             targets: ["PhoneNumberField"]
+        ),
+        .library(
+            name: "BankTextFields",
+            targets: ["BankTextFields"]
         )
     ],
-    dependencies: [ ],
+    dependencies: [ 
+        .package(url: "https://github.com/attaswift/BigInt.git", from: Version(5, 0, 0))
+    ],
     targets: [
         .target(
-            name: "MaskedTextFields",
-            dependencies: [],
-            resources: []
+            name: "MaskedTextFields"
         ),
         .target(
             name: "PhoneNumberField",
             dependencies: ["MaskedTextFields"]
+        ),
+        .target(
+            name: "BankTextFields",
+            dependencies: ["MaskedTextFields", "BigInt"]
         ),
         .testTarget(
             name: "MaskedTextFieldsTests",
@@ -35,6 +43,10 @@ let package = Package(
         .testTarget(
             name: "PhoneNumberTests",
             dependencies: ["PhoneNumberField"]
+        ),
+        .testTarget(
+            name: "BankTextFieldsTests",
+            dependencies: ["BankTextFields"]
         )
     ]
 )
