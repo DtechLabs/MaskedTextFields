@@ -19,7 +19,7 @@ public protocol TextFieldDecorator {
     
 }
 
-extension TextFieldDecorator {
+public extension TextFieldDecorator {
     
     func applyMask(mask: String, digitMask: Character = "#", to text: String) -> String {
         var result = ""

@@ -1,20 +1,20 @@
 //
-// BankCardHolderField.swift
-// MaskedTextFields
+// BankCardExpiredDateField.swift
+// BankTextField
 //
-// Using Swift 5.0
-// Created by Yury Dryhin on 04.10.2023
+// Created by Yury Dryhin on December 2023
 // email: yuri.drigin@icloud.com
 // LinkedIn: https://www.linkedin.com/in/dtechlabs/
 // Copyright © 2023  DTechLabs. All rights reserved.
 //
 
 import SwiftUI
+import MaskedTextFields
 
-public struct BankCardHolderField<FieldId: Hashable>: View {
+public struct BankCardExpiredDateField<FieldId: Hashable>: View {
     
     let placeholder: String
-    @Binding var holderName: String
+    @Binding var date: BankCardExpiredDate
     let focused: FocusState<FieldId?>.Binding
     let fieldId: FieldId
     let textColor: Color
@@ -22,14 +22,14 @@ public struct BankCardHolderField<FieldId: Hashable>: View {
     
     public init(
         placeholder: String,
-        holderName: Binding<String>,
+        expiredDate: Binding<BankCardExpiredDate>,
         focused: FocusState<FieldId?>.Binding,
         fieldId: FieldId,
         textColor: Color,
         toolBarTint: Color
     ) {
         self.placeholder = placeholder
-        self._holderName = holderName
+        self._date = expiredDate
         self.focused = focused
         self.fieldId = fieldId
         self.textColor = textColor
@@ -39,16 +39,18 @@ public struct BankCardHolderField<FieldId: Hashable>: View {
     public var body: some View {
         MaskedTextField(
             placeholder: placeholder,
-            value: $holderName,
-            mask: BankCardHolderDecorator(),
+            value: Binding(
+                get: { date.text },
+                set: { date.text = $0 }
+            ),
+            mask: BankCardExpiredDateDecorator(),
             focused: focused,
             field: fieldId,
-            keyboardToolbarBuilder: KeyboardToolbarBuilder(items: [.paste, .hideKeyboard], tintColor: UIColor(toolBarTint))
+            keyboardToolbarBuilder: KeyboardToolbarBuilder(items: [.paste, .hideKeyboard],tintColor: UIColor(toolBarTint))
         ) { textField in
             textField.textColor = UIColor(textColor)
             textField.tintColor = UIColor(textColor)
-            textField.keyboardType = .asciiCapable
-            textField.autocorrectionType = .no
+            textField.keyboardType = .numberPad
         }
     }
     
