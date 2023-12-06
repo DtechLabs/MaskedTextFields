@@ -16,10 +16,11 @@
 		DAA696E92B19BCEF00E08E6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAA696E82B19BCEF00E08E6E /* Assets.xcassets */; };
 		DAA696EC2B19BCEF00E08E6E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAA696EB2B19BCEF00E08E6E /* Preview Assets.xcassets */; };
 		DAA696F42B19BD1100E08E6E /* MaskedTextFields in Frameworks */ = {isa = PBXBuildFile; productRef = DAA696F32B19BD1100E08E6E /* MaskedTextFields */; };
-		DAA696F62B19BD1100E08E6E /* PhoneNumberField in Frameworks */ = {isa = PBXBuildFile; productRef = DAA696F52B19BD1100E08E6E /* PhoneNumberField */; };
 		DAA696F82B19BDCB00E08E6E /* MaskedTextFields in Frameworks */ = {isa = PBXBuildFile; productRef = DAA696F72B19BDCB00E08E6E /* MaskedTextFields */; };
-		DAA696FA2B19BDCB00E08E6E /* PhoneNumberField in Frameworks */ = {isa = PBXBuildFile; productRef = DAA696F92B19BDCB00E08E6E /* PhoneNumberField */; };
 		DAFBB1AE2B209D0A007CBD1D /* BaseField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFBB1AD2B209D0A007CBD1D /* BaseField.swift */; };
+		DAFBB1B02B20C625007CBD1D /* BankTextFields in Frameworks */ = {isa = PBXBuildFile; productRef = DAFBB1AF2B20C625007CBD1D /* BankTextFields */; };
+		DAFBB1B22B20C625007CBD1D /* MaskedTextFields in Frameworks */ = {isa = PBXBuildFile; productRef = DAFBB1B12B20C625007CBD1D /* MaskedTextFields */; };
+		DAFBB1B42B20C625007CBD1D /* PhoneNumberFields in Frameworks */ = {isa = PBXBuildFile; productRef = DAFBB1B32B20C625007CBD1D /* PhoneNumberFields */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,10 +41,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAFBB1B42B20C625007CBD1D /* PhoneNumberFields in Frameworks */,
 				DAA696F82B19BDCB00E08E6E /* MaskedTextFields in Frameworks */,
 				DAA696F42B19BD1100E08E6E /* MaskedTextFields in Frameworks */,
-				DAA696F62B19BD1100E08E6E /* PhoneNumberField in Frameworks */,
-				DAA696FA2B19BDCB00E08E6E /* PhoneNumberField in Frameworks */,
+				DAFBB1B22B20C625007CBD1D /* MaskedTextFields in Frameworks */,
+				DAFBB1B02B20C625007CBD1D /* BankTextFields in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,9 +118,10 @@
 			name = MaskedTextFieldsDemoApp;
 			packageProductDependencies = (
 				DAA696F32B19BD1100E08E6E /* MaskedTextFields */,
-				DAA696F52B19BD1100E08E6E /* PhoneNumberField */,
 				DAA696F72B19BDCB00E08E6E /* MaskedTextFields */,
-				DAA696F92B19BDCB00E08E6E /* PhoneNumberField */,
+				DAFBB1AF2B20C625007CBD1D /* BankTextFields */,
+				DAFBB1B12B20C625007CBD1D /* MaskedTextFields */,
+				DAFBB1B32B20C625007CBD1D /* PhoneNumberFields */,
 			);
 			productName = MaskedTextFieldsDemoApp;
 			productReference = DAA696E12B19BCEE00E08E6E /* MaskedTextFieldsDemoApp.app */;
@@ -404,17 +407,21 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MaskedTextFields;
 		};
-		DAA696F52B19BD1100E08E6E /* PhoneNumberField */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PhoneNumberField;
-		};
 		DAA696F72B19BDCB00E08E6E /* MaskedTextFields */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MaskedTextFields;
 		};
-		DAA696F92B19BDCB00E08E6E /* PhoneNumberField */ = {
+		DAFBB1AF2B20C625007CBD1D /* BankTextFields */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = PhoneNumberField;
+			productName = BankTextFields;
+		};
+		DAFBB1B12B20C625007CBD1D /* MaskedTextFields */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MaskedTextFields;
+		};
+		DAFBB1B32B20C625007CBD1D /* PhoneNumberFields */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PhoneNumberFields;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

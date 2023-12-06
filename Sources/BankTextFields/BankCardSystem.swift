@@ -47,6 +47,24 @@ public enum BankCardSystem: CaseIterable {
         }
     }
     
+    public var name: String {
+        switch self {
+            case .VisaElectron: return "Visa Electron"
+            case .Visa: return "Visa"
+            case .AmericanExpress: return "American Express"
+            case .UnionPay: return "Union Pay"
+            case .MasterCard: return "Mastercard"
+            case .Maestro: return "Maestro"
+            case .DinersClubCarteBlanche: return "Diners Club Carte Blanche"
+            case .DinersClubInternational: return "Diners Club International"
+            case .DinersClubUSA_Canada: return "Diners Club USA"
+            case .Discover: return "Discover"
+            case .JCB: return "JCB"
+            case .UATP: return "UATP"
+            case .Dankort: return "Dankort"
+            case .InterPayment: return "Inter Payment"
+        }
+    }
 }
 
 // MARK: Bank card numbers
