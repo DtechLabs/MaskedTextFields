@@ -19,16 +19,14 @@ public struct PhoneNumberField<FieldId: Hashable>: View {
     let font: UIFont
     let textColor: Color
     let toolBarTint: Color
-    let region: RegionPhoneMetadata?
     let showCountry: CountryVisible
     let onSelectCountry: (() -> Void)?
     
-    @State var decorator: PhoneNumberDecorator
     @State private var selectCounty = false
+    @State private var decorator: PhoneNumberDecorator
     
     public init(
         placeholder: String,
-        region: RegionPhoneMetadata?,
         phoneNumber: Binding<PhoneNumber>,
         showCountry: CountryVisible = .none,
         onSelectCountry: (() -> Void)? = nil,
@@ -39,7 +37,6 @@ public struct PhoneNumberField<FieldId: Hashable>: View {
         toolBarTint: Color? = nil
     ) {
         self.placeholder = placeholder
-        self.region = region
         self._phoneNumber = phoneNumber
         self.focused = focused
         self.fieldId = fieldId
@@ -48,7 +45,7 @@ public struct PhoneNumberField<FieldId: Hashable>: View {
         self.showCountry = showCountry
         self.font = font
         self.onSelectCountry = onSelectCountry
-        self._decorator = State(initialValue: PhoneNumberDecorator(region: region))
+        self._decorator = State(initialValue: PhoneNumberDecorator(region: phoneNumber.region.wrappedValue))
     }
     
     public var body: some View {
@@ -93,7 +90,7 @@ public struct PhoneNumberField<FieldId: Hashable>: View {
                     get: { phoneNumber.number },
                     set: { phoneNumber.setNumber($0) }
                 ),
-                mask: PhoneNumberDecorator(region: region),
+                mask: decorator,
                 focused: focused,
                 field: fieldId,
                 keyboardToolbarBuilder: KeyboardToolbarBuilder(items: [.paste, .hideKeyboard],tintColor: UIColor(toolBarTint))
@@ -111,10 +108,7 @@ public struct PhoneNumberField<FieldId: Hashable>: View {
                 color: textColor,
                 selectedCountry: Binding(
                     get: { phoneNumber.country },
-                    set: {
-                        let region = phoneNumber.setCountry($0)
-                        self.decorator.setRegion(region)
-                    }
+                    set: { decorator.region = phoneNumber.setCountry($0) }
                 )
             )
         }

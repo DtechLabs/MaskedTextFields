@@ -11,7 +11,7 @@
 import Foundation
 import MaskedTextFields
 
-struct BankCardCVCDecorator: TextFieldDecorator {
+class BankCardCVCDecorator: TextFieldDecorator {
    
     let mask = "###"
     let characterSet = CharacterSet(charactersIn: "0123456789")

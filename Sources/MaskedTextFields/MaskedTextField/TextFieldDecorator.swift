@@ -11,12 +11,12 @@
         
 import Foundation
 
-public protocol TextFieldDecorator {
+public protocol TextFieldDecorator: ObservableObject {
     
-    mutating func applyMask(_ text: String?) -> String?
+    func applyMask(_ text: String?) -> String?
     func removeMask(_ text: String?) -> String?
     func shouldChange(_ text: String?, with string: String, in range: NSRange) -> Bool
-    
+
 }
 
 public extension TextFieldDecorator {

@@ -12,7 +12,7 @@
 import Foundation
 import MaskedTextFields
 
-struct BankCardExpiredDateDecorator: TextFieldDecorator {
+class BankCardExpiredDateDecorator: TextFieldDecorator {
    
     let mask: String
     let length: Int

@@ -11,13 +11,13 @@
 import Foundation
 import MaskedTextFields
 
-struct BankCardNumberDecorator: TextFieldDecorator {
+class BankCardNumberDecorator: TextFieldDecorator {
     
     private let characterSet = CharacterSet(charactersIn: "0123456789")
     
     private var system: BankCardIssuer.Type?
     
-    mutating func getBankSystem(_ text: String) -> BankCardIssuer.Type? {
+    func getBankSystem(_ text: String) -> BankCardIssuer.Type? {
         guard let system = system, system.isNumberFit(text) else {
             let issuer = BankCardSystem.allCases.first { $0.system.isNumberFit(text) }
             self.system = issuer?.system
@@ -27,7 +27,7 @@ struct BankCardNumberDecorator: TextFieldDecorator {
         return system
     }
     
-    mutating func applyMask(_ text: String?) -> String? {
+    func applyMask(_ text: String?) -> String? {
         guard
             let text = removeMask(text),
             !text.isEmpty

@@ -11,26 +11,21 @@
         
 import SwiftUI
 
-public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
+public struct MaskedTextField<Field: Hashable, Decorator: TextFieldDecorator>: UIViewRepresentable {
 
     var placeholder: String
     @Binding var value: String
-    @State var mask: TextFieldDecorator
+    @StateObject var mask: Decorator
     let focused: FocusState<Field?>.Binding
     let field: Field
     let keyboardToolbarBuilder: KeyboardToolbarBuilder?
     private let setProperties: ((UITextField) -> Void)?
     private let textField = UITextField(frame: .zero)
     
-    var masketText: String? {
-        mutating get { mask.applyMask(value) }
-        set { value = mask.removeMask(newValue) ?? "" }
-    }
-    
     public init(
         placeholder: String,
         value: Binding<String>,
-        mask: TextFieldDecorator,
+        mask: Decorator,
         focused: FocusState<Field?>.Binding,
         field: Field,
         keyboardToolbarBuilder: KeyboardToolbarBuilder? = nil,
@@ -38,7 +33,7 @@ public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
     ) {
         self.placeholder = placeholder
         self._value = value
-        self._mask = State(initialValue: mask)
+        self._mask = StateObject(wrappedValue: mask)
         self.focused = focused
         self.field = field
         self.setProperties = setProperties
@@ -65,11 +60,10 @@ public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
     
     public func updateUIView(_ uiView: UITextField, context: Context) {
         DispatchQueue.main.async {
-            if focused.wrappedValue != field && uiView.text != mask.applyMask(value) {
-                uiView.text = mask.applyMask(value)
-            } else if mask.applyMask(uiView.text) != uiView.text {
-                uiView.text = mask.applyMask(uiView.text)
-            }
+            let masked = mask.applyMask(value)
+            if focused.wrappedValue != field && uiView.text != masked {
+                uiView.text = masked
+            } 
         }
     }
     
@@ -87,12 +81,13 @@ public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
         
         public func textFieldDidChangeSelection(_ textField: UITextField) {
             guard
+                let text = textField.text,
                 textField.markedTextRange == nil,
-                parent.masketText != textField.text
+                parent.value != parent.mask.removeMask(text)
             else {
                 return
             }
-            parent.masketText = textField.text
+            parent.value = parent.mask.removeMask(text) ?? ""
         }
         
         public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -100,7 +95,9 @@ public struct MaskedTextField<Field: Hashable>: UIViewRepresentable {
                 let atTheEnd = textField.text?.count == textField.caretPosition
                 let value = parent.mask.removeMask(textField.text?.replacing(string, in: range))
                 textField.text = parent.mask.applyMask(value)
-                parent.value = value ?? ""
+                if !(parent.value == value || (value == nil && parent.value == "")) {
+                    parent.value = value ?? ""
+                }
                 DispatchQueue.main.async {
                     textField.caretPosition = atTheEnd ? (textField.text?.count ?? 0) : range.lowerBound + string.count
                 }

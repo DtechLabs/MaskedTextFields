@@ -19,6 +19,7 @@
 		DAA696F62B19BD1100E08E6E /* PhoneNumberField in Frameworks */ = {isa = PBXBuildFile; productRef = DAA696F52B19BD1100E08E6E /* PhoneNumberField */; };
 		DAA696F82B19BDCB00E08E6E /* MaskedTextFields in Frameworks */ = {isa = PBXBuildFile; productRef = DAA696F72B19BDCB00E08E6E /* MaskedTextFields */; };
 		DAA696FA2B19BDCB00E08E6E /* PhoneNumberField in Frameworks */ = {isa = PBXBuildFile; productRef = DAA696F92B19BDCB00E08E6E /* PhoneNumberField */; };
+		DAFBB1AE2B209D0A007CBD1D /* BaseField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFBB1AD2B209D0A007CBD1D /* BaseField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		DAA696E62B19BCEE00E08E6E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		DAA696E82B19BCEF00E08E6E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DAA696EB2B19BCEF00E08E6E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DAFBB1AD2B209D0A007CBD1D /* BaseField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				DAA696E82B19BCEF00E08E6E /* Assets.xcassets */,
 				DAA696EA2B19BCEF00E08E6E /* Preview Content */,
 				DA1362292B1F11810067AB9C /* DemoFieldsVM.swift */,
+				DAFBB1AD2B209D0A007CBD1D /* BaseField.swift */,
 			);
 			path = MaskedTextFieldsDemoApp;
 			sourceTree = "<group>";
@@ -178,6 +181,7 @@
 				DA13622A2B1F11810067AB9C /* DemoFieldsVM.swift in Sources */,
 				DAA696E72B19BCEE00E08E6E /* ContentView.swift in Sources */,
 				DA13622F2B1F15770067AB9C /* ReadSizeModifier.swift in Sources */,
+				DAFBB1AE2B209D0A007CBD1D /* BaseField.swift in Sources */,
 				DAA696E52B19BCEE00E08E6E /* MaskedTextFieldsDemoAppApp.swift in Sources */,
 				DA1362282B1F0FFE0067AB9C /* TextFieldDemoStyle.swift in Sources */,
 			);

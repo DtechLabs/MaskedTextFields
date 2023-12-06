@@ -19,6 +19,13 @@ public struct PhoneNumber {
     
     public var region: RegionPhoneMetadata?
     
+    public var international: String {
+        guard let region = region else {
+            return number
+        }
+        return "+\(region.countryCode)\(number)"
+    }
+    
     public init(country: String? = nil) {
         self.number = ""
         self.country = country ?? Locale.current.region?.identifier ?? ""
