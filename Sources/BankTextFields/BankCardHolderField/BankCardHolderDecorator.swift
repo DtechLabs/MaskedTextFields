@@ -11,7 +11,7 @@
 import Foundation
 import MaskedTextFields
 
-struct BankCardHolderDecorator: TextFieldDecorator {
+class BankCardHolderDecorator: TextFieldDecorator {
    
     let characterSet = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLKMNOPQRSTUVWXYZ '~`.-")
     

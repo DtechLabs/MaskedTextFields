@@ -8,22 +8,30 @@
 // Copyright © 2023  DTechLabs. All rights reserved.
 //
 
-import Foundation
+import Combine
+import SwiftUI
 import MaskedTextFields
 
-struct PhoneNumberDecorator: TextFieldDecorator {
+class PhoneNumberDecorator: TextFieldDecorator, ObservableObject {
     
     private let characterSet = CharacterSet(charactersIn: "0123456789")
     
-    private(set) var region: RegionPhoneMetadata?
+    @Published var region: RegionPhoneMetadata?
     private var range: RegionPhoneMetadata.Range?
+    private var cancellable = Set<AnyCancellable>()
     
     public init(region: RegionPhoneMetadata?, range: RegionPhoneMetadata.Range? = nil) {
         self.region = region
         self.range = range
+        
+        $region
+            .sink { [weak self] _ in
+                self?.range = nil
+            }
+            .store(in: &cancellable)
     }
     
-    mutating func getNewRange(_ text: String) throws -> RegionPhoneMetadata.Range? {
+   func getNewRange(_ text: String) throws -> RegionPhoneMetadata.Range? {
         guard let region = region, text.count > 3 else {
             return nil
         }
@@ -47,7 +55,7 @@ struct PhoneNumberDecorator: TextFieldDecorator {
         return mobileMasks.first ?? fixedLineMasks.first ?? masks.first
     }
     
-    mutating func getRange(_ text: String) throws -> RegionPhoneMetadata.Range? {
+    func getRange(_ text: String) throws -> RegionPhoneMetadata.Range? {
         if let range = range, try Regex(range.leadingDigits).prefixMatch(in: text) != nil {
             return range
         }
@@ -57,7 +65,7 @@ struct PhoneNumberDecorator: TextFieldDecorator {
         return newRange
     }
     
-    mutating func applyMask(_ text: String?) -> String? {
+    func applyMask(_ text: String?) -> String? {
         guard
             let text = removeMask(text),
             !text.isEmpty
@@ -86,7 +94,7 @@ struct PhoneNumberDecorator: TextFieldDecorator {
         }
     }
     
-    mutating func setRegion(_ region: RegionPhoneMetadata?) {
+    func setRegion(_ region: RegionPhoneMetadata?) {
         self.region = region
         self.range = nil
     }

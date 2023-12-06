@@ -49,10 +49,34 @@ final class MobilePhoneFormatterTests: XCTestCase {
             if mask.rangeOfCharacter(from: CharacterSet(charactersIn: ".()-+ ")) != nil {
                 XCTAssertNotEqual(example, decorator.applyMask(example), "Country \(code)")
             } else {
-                
                 XCTAssertEqual(example, decorator.applyMask(example), "Country \(code)")
             }
         }
     }
     
+    func testDetectInternationalRegion() throws {
+        for (code, country) in AllRegionsPhoneMetadata {
+            let example = "+\(country.countryCode)" + country.mobile.example
+            let example2 = "+\(country.countryCode)" + country.fixed.example
+            let regions = PhoneInternationalNumber.findPossibleCountries(example)
+            let countries = regions.map { $0.country }
+            XCTAssertTrue(countries.contains(code))
+
+            let regions2 = PhoneInternationalNumber.findPossibleCountries(example2)
+            let countries2 = regions2.map { $0.country }
+
+            XCTAssertTrue(countries2.contains(code))
+        }
+    }
+    
+    func testInternationalNumberValidation() throws {
+        for (_, country) in AllRegionsPhoneMetadata {
+            let example = "+\(country.countryCode)" + country.mobile.example
+            let example2 = "+\(country.countryCode)" + country.fixed.example
+            let mobile = try PhoneInternationalNumber(example)
+            let fixed = try PhoneInternationalNumber(example2)
+            XCTAssertTrue(try mobile.isValid())
+            XCTAssertTrue(try fixed.isValid())
+        }
+    }
 }

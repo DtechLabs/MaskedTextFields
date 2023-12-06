@@ -204,6 +204,7 @@ import Foundation
     internationalPrefix: {internationalPrefix},
     internationalPrefixCountryCode: {internationalPrefixcountryCode},
     nationalPrefixFormattingRule: {nationalPrefixFormattingRule},
+    nationalPrefixForParsing: {nationalPrefixForParsing},
     generalDesc: {generalDesc},
     mobile: {mobile},
     fixed: {fixed},
@@ -254,12 +255,14 @@ import Foundation
             internationalPrefix = 'nil' if 'internationalPrefix' not in region else f"\"{region['internationalPrefix']}\"".replace("\\","\\\\")
             internationalPrefixcountryCode = 'nil' if 'internationalPrefixcountryCode' not in region else f"\"{region['internationalPrefixcountryCode']}\""
             nationalPrefixFormattingRule = 'nil' if 'nationalPrefixFormattingRule' not in region else f"\"{region['nationalPrefixFormattingRule']}\""
+            nationalPrefixForParsing = 'nil' if 'nationalPrefixForParsing' not in region else f"\"{region['nationalPrefixForParsing']}\"".replace("\\","\\\\")
 
             file.write(template.format(countryCode=region['id'], code=region['countryCode'], \
                     generalDesc=generalDesc, fixed=fixedLine, mobile=mobile, ranges=ranges, \
                     nationalPrefix=nationalPrefix, internationalPrefix=internationalPrefix, \
                     internationalPrefixcountryCode=internationalPrefixcountryCode, \
-                    nationalPrefixFormattingRule=nationalPrefixFormattingRule
+                    nationalPrefixFormattingRule=nationalPrefixFormattingRule, \
+                    nationalPrefixForParsing=nationalPrefixForParsing
                 ))
 
 def save_allRegions(metadata):

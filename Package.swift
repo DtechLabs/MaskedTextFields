@@ -37,10 +37,6 @@ let package = Package(
             dependencies: ["MaskedTextFields", "BigInt"]
         ),
         .testTarget(
-            name: "MaskedTextFieldsTests",
-            dependencies: ["MaskedTextFields"]
-        ),
-        .testTarget(
             name: "PhoneNumberTests",
             dependencies: ["PhoneNumberField"]
         ),

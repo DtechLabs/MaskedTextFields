@@ -96,6 +96,17 @@ public struct RegionPhoneMetadata: Hashable, Identifiable {
             self.pattern = pattern
             self.example = example
         }
+        
+        /// Check if number matching pattern in national format
+        /// - Parameter number: Phone number in national format (without country prefix)
+        /// - Returns: `True` if matched
+        func isNumberMatch(_ number: String) -> Bool {
+            if !national.contains(number.count) {
+                return false
+            }
+            
+            return try! Regex(pattern).wholeMatch(in: number) != nil
+        }
     }
     
     public struct Range: Hashable {
@@ -113,6 +124,7 @@ public struct RegionPhoneMetadata: Hashable, Identifiable {
     public let internationalPrefix: String?
     public let internationalPrefixCountryCode: String?
     public let nationalPrefixFormattingRule: String?
+    public let nationalPrefixForParsing: String?
     public let generalDesc: GeneralDesc
     public let mobile: Line
     public let fixed: Line
