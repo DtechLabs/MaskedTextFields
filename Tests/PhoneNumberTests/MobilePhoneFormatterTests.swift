@@ -1,6 +1,6 @@
 import XCTest
 import RegexBuilder
-@testable import PhoneNumberField
+@testable import PhoneNumberFields
 
 final class MobilePhoneFormatterTests: XCTestCase {
 
@@ -34,7 +34,7 @@ final class MobilePhoneFormatterTests: XCTestCase {
             guard !country.ranges.isEmpty else {
                 continue
             }
-            var decorator = PhoneNumberDecorator(region: AllRegionsPhoneMetadata[code]!)
+            let decorator = PhoneNumberDecorator(region: AllRegionsPhoneMetadata[code]!)
             let example = country.mobile.example
             let range = try decorator.getRange(example)
             

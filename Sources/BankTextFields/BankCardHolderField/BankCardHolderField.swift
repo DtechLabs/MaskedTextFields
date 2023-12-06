@@ -19,14 +19,16 @@ public struct BankCardHolderField<FieldId: Hashable>: View {
     let fieldId: FieldId
     let textColor: Color
     let toolBarTint: Color
+    let font: UIFont
     
     public init(
         placeholder: String,
         holderName: Binding<String>,
         focused: FocusState<FieldId?>.Binding,
         fieldId: FieldId,
-        textColor: Color,
-        toolBarTint: Color
+        font: UIFont = .preferredFont(forTextStyle: .body),
+        textColor: Color = .primary,
+        toolBarTint: Color = .secondary
     ) {
         self.placeholder = placeholder
         self._holderName = holderName
@@ -34,6 +36,7 @@ public struct BankCardHolderField<FieldId: Hashable>: View {
         self.fieldId = fieldId
         self.textColor = textColor
         self.toolBarTint = toolBarTint
+        self.font = font
     }
     
     public var body: some View {
@@ -49,7 +52,9 @@ public struct BankCardHolderField<FieldId: Hashable>: View {
             textField.tintColor = UIColor(textColor)
             textField.keyboardType = .asciiCapable
             textField.autocorrectionType = .no
+            textField.font = font
         }
+        .fixedSize(horizontal: false, vertical: true)
     }
     
 }

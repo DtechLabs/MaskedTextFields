@@ -19,14 +19,16 @@ public struct BankCardExpiredDateField<FieldId: Hashable>: View {
     let fieldId: FieldId
     let textColor: Color
     let toolBarTint: Color
+    let font: UIFont
     
     public init(
         placeholder: String,
         expiredDate: Binding<BankCardExpiredDate>,
         focused: FocusState<FieldId?>.Binding,
         fieldId: FieldId,
-        textColor: Color,
-        toolBarTint: Color
+        font: UIFont = .preferredFont(forTextStyle: .body),
+        textColor: Color = .primary,
+        toolBarTint: Color = .secondary
     ) {
         self.placeholder = placeholder
         self._date = expiredDate
@@ -34,6 +36,7 @@ public struct BankCardExpiredDateField<FieldId: Hashable>: View {
         self.fieldId = fieldId
         self.textColor = textColor
         self.toolBarTint = toolBarTint
+        self.font = font
     }
     
     public var body: some View {
@@ -51,7 +54,9 @@ public struct BankCardExpiredDateField<FieldId: Hashable>: View {
             textField.textColor = UIColor(textColor)
             textField.tintColor = UIColor(textColor)
             textField.keyboardType = .numberPad
+            textField.font = font
         }
+        .fixedSize(horizontal: false, vertical: true)
     }
     
 }

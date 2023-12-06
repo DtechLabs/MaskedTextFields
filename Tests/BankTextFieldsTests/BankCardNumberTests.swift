@@ -33,7 +33,7 @@ final class BankCardNumberTests: XCTestCase {
     ]
 
     func testDecorator() {
-        var decorator = BankCardNumberDecorator()
+        let decorator = BankCardNumberDecorator()
         
         XCTAssertEqual(decorator.applyMask(""), "")
         XCTAssertEqual(decorator.applyMask("4111"), "4111")

@@ -13,8 +13,8 @@ let package = Package(
             targets: ["MaskedTextFields"]
         ),
         .library(
-            name: "PhoneNumberField",
-            targets: ["PhoneNumberField"]
+            name: "PhoneNumberFields",
+            targets: ["PhoneNumberFields"]
         ),
         .library(
             name: "BankTextFields",
@@ -29,7 +29,7 @@ let package = Package(
             name: "MaskedTextFields"
         ),
         .target(
-            name: "PhoneNumberField",
+            name: "PhoneNumberFields",
             dependencies: ["MaskedTextFields"]
         ),
         .target(
@@ -38,7 +38,7 @@ let package = Package(
         ),
         .testTarget(
             name: "PhoneNumberTests",
-            dependencies: ["PhoneNumberField"]
+            dependencies: ["PhoneNumberFields"]
         ),
         .testTarget(
             name: "BankTextFieldsTests",
