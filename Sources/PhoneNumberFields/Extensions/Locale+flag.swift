@@ -11,7 +11,7 @@
 
 import Foundation
 
-extension Locale {
+public extension Locale {
     
     func flag(_ country: String) -> String {
         let base : UInt32 = 127397
