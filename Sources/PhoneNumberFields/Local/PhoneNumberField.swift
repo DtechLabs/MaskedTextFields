@@ -45,7 +45,8 @@ public struct PhoneNumberField<FieldId: Hashable>: View {
         self.showCountry = showCountry
         self.font = font
         self.onSelectCountry = onSelectCountry
-        self._decorator = State(initialValue: PhoneNumberDecorator(region: phoneNumber.region.wrappedValue))
+        let region = phoneNumber.wrappedValue.region.value
+        self._decorator = State(initialValue: PhoneNumberDecorator(region: region))
     }
     
     public var body: some View {
@@ -71,7 +72,7 @@ public struct PhoneNumberField<FieldId: Hashable>: View {
                     .tint(textColor)
             }
             
-            if showCountry == .code, let code = phoneNumber.region?.countryCode {
+            if showCountry == .code, let code = phoneNumber.region.value?.countryCode {
                 Button(
                     action: { selectCounty = true },
                     label: {
@@ -102,13 +103,16 @@ public struct PhoneNumberField<FieldId: Hashable>: View {
             }
             .fixedSize(horizontal: false, vertical: true)
         }
+        .onReceive(phoneNumber.region) { region in
+            decorator.region = region
+        }
         .sheet(isPresented: $selectCounty) {
             SelectCountry(
                 font: font,
                 color: textColor,
                 selectedCountry: Binding(
                     get: { phoneNumber.country },
-                    set: { decorator.region = phoneNumber.setCountry($0) }
+                    set: { phoneNumber.setCountry($0) }
                 )
             )
         }

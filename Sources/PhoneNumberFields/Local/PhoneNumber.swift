@@ -5,7 +5,9 @@
 //  Created by Yury Dryhin on 05.09.2023.
 //  Copyright © 2023 DTechLabs. All rights reserved.
 //
+
 import Foundation
+import Combine
 
 public struct PhoneNumber {
     
@@ -17,10 +19,10 @@ public struct PhoneNumber {
     private let allowedChars = Set("0123456789()-+ ")
     private let digitMaskSymbol: Character = "X"
     
-    public var region: RegionPhoneMetadata?
+    public let region: CurrentValueSubject<RegionPhoneMetadata?, Never>
     
     public var international: String {
-        guard let region = region else {
+        guard let region = region.value else {
             return number
         }
         return "+\(region.countryCode)\(number)"
@@ -29,7 +31,7 @@ public struct PhoneNumber {
     public init(country: String? = nil) {
         self.number = ""
         self.country = country ?? Locale.current.region?.identifier ?? ""
-        self.region = AllRegionsPhoneMetadata[self.country]
+        self.region = CurrentValueSubject(AllRegionsPhoneMetadata[self.country])
     }
     
     public init(_ number: String, country: String? = nil) throws {
@@ -38,7 +40,7 @@ public struct PhoneNumber {
         }
         self.number = number.components(separatedBy: .decimalDigits.inverted).joined()
         self.country = country ?? Locale.current.region?.identifier ?? ""
-        self.region = AllRegionsPhoneMetadata[self.country]
+        self.region = CurrentValueSubject(AllRegionsPhoneMetadata[self.country])
     }
     
     public mutating func setNumber(_ number: String) {
@@ -48,10 +50,9 @@ public struct PhoneNumber {
         self.number = number.components(separatedBy: .decimalDigits.inverted).joined()
     }
     
-    public mutating func setCountry(_ country: String) -> RegionPhoneMetadata? {
-        self.region = AllRegionsPhoneMetadata[country]
+    public mutating func setCountry(_ country: String) {
+        self.region.send(AllRegionsPhoneMetadata[country])
         self.country = country
-        return self.region
     }
     
     public func format(by mask: String?) -> String {
@@ -77,7 +78,7 @@ public struct PhoneNumber {
     }
 
     public func isValid() throws -> Bool {
-        guard let region = region else {
+        guard let region = region.value else {
             // Region didn't set so we cannot validate
             throw PhoneNumberError.metadataNotFound
         }

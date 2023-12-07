@@ -48,6 +48,32 @@ struct ContentView: View {
                 )
                 
                 BaseField(
+                    label: "Phone",
+                    focused: $focused,
+                    fieldId: .phoneNumber,
+                    state: vm.phoneNumberState,
+                    field: {
+                        HStack(alignment: .center, spacing: 10) {
+                            
+                            Button(
+                                action: { vm.phoneNumber.setCountry("BY") },
+                                label: {                            Text(Locale().flag(vm.phoneNumber.country))
+                                        .font(.system(size: 20))
+                                }
+                            )
+
+                            PhoneNumberField(
+                                placeholder: "Enter phone number",
+                                phoneNumber: $vm.phoneNumber,
+                                focused: $focused,
+                                fieldId: Field.phoneNumber,
+                                font: .systemFont(ofSize: 16, weight: .medium)
+                            )
+                        }
+                    }
+                )
+                
+                BaseField(
                     label: "International phone",
                     focused: $focused,
                     fieldId: .international,
