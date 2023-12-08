@@ -65,6 +65,10 @@ public enum BankCardSystem: CaseIterable {
             case .InterPayment: return "Inter Payment"
         }
     }
+    
+    public static func detect(_ number: String) -> BankCardSystem? {
+        BankCardSystem.allCases.first { $0.system.isNumberFit(number) }
+    }
 }
 
 // MARK: Bank card numbers
@@ -119,6 +123,7 @@ public extension BankCardIssuer {
         
         return pattern[length] ?? DefaultBankCardNumberMask[length]
     }
+    
 }
 
 public enum VisaBankCard: BankCardIssuer {
