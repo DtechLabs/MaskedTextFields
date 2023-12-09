@@ -39,19 +39,20 @@ public struct BankCardExpiredDate: CustomStringConvertible {
     }
 
     public init(_ text: String, separator: String = "/") {
-        self.text = text
+        self.text = text.split(separator: separator).map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }.joined()
         self.separator = separator
     }
     
     public init(_ date: Date, separator: String = "/") {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM / YY"
+        formatter.dateFormat = "MMYY"
         self.text = formatter.string(from: date)
         self.separator = separator
     }
     
     public var date: Date? {
         guard
+            text.count >= 4,
             let year = year,
             let month = month,
             1...12 ~= month

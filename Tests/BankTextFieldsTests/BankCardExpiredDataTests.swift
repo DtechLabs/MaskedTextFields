@@ -41,8 +41,10 @@ final class BankCardExpiredDataTests: XCTestCase {
         XCTAssertEqual(BankCardExpiredDate("0999").year, 2099)
         XCTAssertEqual(BankCardExpiredDate("1024").year, 2024)
         
-        XCTAssertEqual(BankCardExpiredDate("102").date, nil)
-        XCTAssertEqual(BankCardExpiredDate("1024").date, DateComponents(year: 24, month: 10, day: 31).date)
+        XCTAssertNil(BankCardExpiredDate("102").date)
+        let date1 = Calendar.current.date(from: DateComponents(year: 2024, month: 10, day: 31, hour: 23, minute: 59, second: 0))
+        XCTAssertEqual(BankCardExpiredDate("1024").date, date1)
+        XCTAssertNotNil(BankCardExpiredDate(.now).date)
         
     }
     
